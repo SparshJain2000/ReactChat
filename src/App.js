@@ -10,6 +10,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import {
     Button,
     TextField,
+    Zoom,
     AppBar,
     IconButton,
     Toolbar,
@@ -29,6 +30,7 @@ import { createMuiTheme, withStyles } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { Telegram, ExitToApp, Facebook } from "@material-ui/icons";
 import logo from "./fire.svg";
+import Axios from "axios";
 firebase.initializeApp({
     apiKey: "AIzaSyC5bjSXgNT4ME3G1CtMECI2Ee2d2fLIMJQ",
     authDomain: "reactchat-d97e5.firebaseapp.com",
@@ -58,6 +60,17 @@ function App() {
     const [user] = useAuthState(auth);
     const [open, handleOpen] = useState(false);
     const [err, handleErr] = useState("");
+    const [users, setUsers] = useState([]);
+    const getUsers = () => {
+        Axios.get(
+            "https://us-central1-reactchat-d97e5.cloudfunctions.net/getAllUsers",
+        )
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((err) => console.log(err.response));
+    };
+    getUsers();
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -267,17 +280,24 @@ const ChatRoom = () => {
 const ChatMess = ({ msg }) => {
     const { text, uid, photoURL } = msg;
     return (
-        <ListItem
-            className={`${
-                uid !== auth.currentUser.uid ? "row" : "row-reverse"
-            }`}
-            alignItems='flex-start'>
-            <ListItemAvatar>
-                <Avatar src={photoURL} alt='' />
-            </ListItemAvatar>
-            <ListItemText primary={text} className='w-max my-auto p-2' />
-            {/* <p>{text}</p> */}
-        </ListItem>
+        <Zoom in={true} style={{ transitionDelay: "600ms" }}>
+            {/* <div className='bg-secondary'> */}
+            <ListItem
+                className={`${
+                    uid !== auth.currentUser.uid ? "row" : "row-reverse"
+                }`}
+                alignItems='flex-start'>
+                <ListItemAvatar className='my-auto'>
+                    <Avatar src={photoURL} alt='' />
+                </ListItemAvatar>
+                <ListItemText
+                    primary={text}
+                    className='w-max my-auto p-2 m-1 mx-1 wrap bg-secondary'
+                />
+                {/* <p>{text}</p> */}
+            </ListItem>
+            {/* </div> */}
+        </Zoom>
     );
 };
 const GoogleIcon = () => {
