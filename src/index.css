@@ -54,12 +54,30 @@ code {
     /* box-shadow: ; */
 }
 
+.bg-secondary {
+    background-color: #363333!important;
+    border-radius: .25rem;
+}
+
+.MuiTypography-body1 {
+    font-family: 'Open Sans'!important;
+}
+
+.font-open {
+    font-family: 'Open Sans'!important;
+}
+
 .m-1 {
     margin: .25rem .25rem .25rem .25rem!important;
 }
 
 .ml-1 {
     margin-left: .25rem!important;
+}
+
+.mx-1 {
+    margin-left: .25rem!important;
+    margin-right: .25rem!important;
 }
 
 .ml-2 {
@@ -76,7 +94,11 @@ code {
 }
 
 .p-2 {
-    padding: .5rem
+    padding: .5rem!important;
+}
+
+.p-1 {
+    padding: .25rem!important;
 }
 
 .font-raleway {
@@ -89,6 +111,10 @@ code {
 
 .align-left {
     text-align: left
+}
+
+.align-center {
+    text-align: center
 }
 
 .w-75 {
@@ -114,4 +140,8 @@ code {
 
 .mt-10 {
     margin-top: 7vh
+}
+
+.wrap {
+    word-wrap: break-word;
 }

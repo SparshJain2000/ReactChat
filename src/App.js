@@ -12,6 +12,7 @@ import {
     TextField,
     Zoom,
     AppBar,
+    Drawer,
     IconButton,
     Toolbar,
     Typography,
@@ -28,7 +29,7 @@ import {
 } from "@material-ui/core";
 import { createMuiTheme, withStyles } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
-import { Telegram, ExitToApp, Facebook } from "@material-ui/icons";
+import { Telegram, ExitToApp, Facebook, Menu } from "@material-ui/icons";
 import logo from "./fire.svg";
 import Axios from "axios";
 firebase.initializeApp({
@@ -67,34 +68,18 @@ function App() {
         )
             .then((data) => {
                 console.log(data);
+                setUsers(data.data);
             })
             .catch((err) => console.log(err.response));
     };
-    getUsers();
+    useEffect(() => {
+        getUsers();
+    }, []);
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <div className='flex-column'>
-                <AppBar position='absolute' color='primary'>
-                    <Toolbar>
-                        <img src={logo} style={{ height: "1.5rem" }} />
-                        <Typography
-                            variant='h6'
-                            className='f-grow-1 align-left font-raleway ml-2'>
-                            ReactChat
-                        </Typography>
-                        {user ? (
-                            <SignOut />
-                        ) : (
-                            <Button
-                                color='inherit'
-                                href='http://sparshjain.me'
-                                target='_blank'>
-                                {"</> with 🧡 by Sparsh"}
-                            </Button>
-                        )}
-                    </Toolbar>
-                </AppBar>
+                <Navbar user={user} users={users} />
                 <Grid container className='f-grow-1 h-90 mt-10'>
                     <Snackbar
                         style={{ width: "90vw" }}
@@ -129,6 +114,78 @@ function App() {
         </ThemeProvider>
     );
 }
+const UserList = ({ users }) => {
+    return (
+        <List className='p-1'>
+            <Typography variant='h6' className='align-center'>
+                Users
+            </Typography>
+            {users.map((user) => (
+                <ListItem
+                    className={`${"row"}`}
+                    alignItems='flex-start'
+                    key={user.uid}>
+                    <ListItemAvatar className='my-auto'>
+                        <Avatar size='small' src={user.photoURL} alt='' />
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={user.displayName}
+                        className='w-max my-auto font-open'
+                    />
+                </ListItem>
+            ))}
+        </List>
+    );
+};
+const Navbar = ({ user, users }) => {
+    const [isOpen, setOpen] = useState(false);
+    const toggleDrawer = () => {
+        setOpen(!isOpen);
+    };
+
+    return (
+        <AppBar position='fixed' color='primary'>
+            <Toolbar>
+                {user && (
+                    <React.Fragment key={"left"}>
+                        <IconButton
+                            edge='start'
+                            variant='temporary'
+                            // className={classes.menuButton}
+                            onClick={toggleDrawer}
+                            color='inherit'
+                            aria-label='menu'>
+                            <Menu />
+                        </IconButton>
+                        <Drawer
+                            anchor={"left"}
+                            open={isOpen}
+                            onClose={toggleDrawer}>
+                            <UserList users={users} />
+                        </Drawer>
+                    </React.Fragment>
+                )}
+                <img src={logo} style={{ height: "1.5rem" }} />
+                <Typography
+                    variant='h6'
+                    className='f-grow-1 align-left font-raleway ml-2'>
+                    ReactChat
+                </Typography>
+                {user ? (
+                    <SignOut />
+                ) : (
+                    <Button
+                        color='inherit'
+                        size='small'
+                        href='http://sparshjain.me'
+                        target='_blank'>
+                        {"</> with 🧡 by Sparsh"}
+                    </Button>
+                )}
+            </Toolbar>
+        </AppBar>
+    );
+};
 const SignIn = ({ handleErr, handleOpen }) => {
     const signInFB = () => {
         const provider = new firebase.auth.FacebookAuthProvider();
@@ -249,7 +306,10 @@ const ChatRoom = () => {
         <div>
             <main>
                 <List>
-                    {messages && messages.map((msg) => <ChatMess msg={msg} />)}
+                    {messages &&
+                        messages.map((msg) => (
+                            <ChatMess msg={msg} key={msg.id} />
+                        ))}
                 </List>
             </main>
             <div ref={xtra}></div>
@@ -292,7 +352,7 @@ const ChatMess = ({ msg }) => {
                 </ListItemAvatar>
                 <ListItemText
                     primary={text}
-                    className='w-max my-auto p-2 m-1 mx-1 wrap bg-secondary'
+                    className='w-max my-auto p-2 m-1 mx-1 wrap bg-secondary font-open'
                 />
                 {/* <p>{text}</p> */}
             </ListItem>
