@@ -59,6 +59,10 @@ code {
     border-radius: .25rem;
 }
 
+.bg-info {
+    background-color: #132743!important
+}
+
 .MuiTypography-body1 {
     font-family: 'Open Sans'!important;
 }
@@ -87,6 +91,10 @@ code {
 .my-1 {
     margin-top: .25rem!important;
     margin-bottom: .25rem!important;
+}
+
+.pt-10 {
+    padding-top: 7vh!important;
 }
 
 .p-3 {

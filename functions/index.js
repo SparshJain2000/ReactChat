@@ -7,7 +7,7 @@ admin.initializeApp();
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
-const moreBadWords = ["chutia", "loda", "lodu", "gandu", "bc"];
+const moreBadWords = ["chutia", "loda", "lodu", "gandu", "bc", "bsdk"];
 console.log("INSODE");
 const db = admin.firestore();
 exports.getAllUsers = functions.https.onRequest((req, res) => {

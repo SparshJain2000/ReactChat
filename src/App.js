@@ -75,7 +75,7 @@ function App() {
             <CssBaseline />
             <div className='flex-column'>
                 <Navbar user={user} users={users} auth={auth} />
-                <Grid container className='f-grow-1 h-100'>
+                <Grid container className='f-grow-1 h-100 '>
                     <Snackbar
                         style={{ width: "90vw" }}
                         anchorOrigin={{
@@ -94,7 +94,7 @@ function App() {
                         sm={10}
                         md={8}
                         lg={7}
-                        className='mx-auto bg-darker'>
+                        className='mx-auto bg-darker pt-10'>
                         {user ? (
                             <ChatRoom />
                         ) : (
