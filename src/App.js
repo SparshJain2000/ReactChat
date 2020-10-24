@@ -75,7 +75,7 @@ function App() {
             <CssBaseline />
             <div className='flex-column'>
                 <Navbar user={user} users={users} auth={auth} />
-                <Grid container className='f-grow-1 h-90 mt-10'>
+                <Grid container className='f-grow-1 h-100'>
                     <Snackbar
                         style={{ width: "90vw" }}
                         anchorOrigin={{
@@ -113,7 +113,6 @@ function App() {
 const SignIn = ({ handleErr, handleOpen }) => {
     const signInFB = () => {
         const provider = new firebase.auth.FacebookAuthProvider();
-        provider.addScope("user_birthday");
         auth.signInWithPopup(provider)
             .then((result) => {
                 // This gives you a Facebook Access Token. You can use it to access the Facebook API.
