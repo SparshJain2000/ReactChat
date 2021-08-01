@@ -28,14 +28,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { Telegram, Facebook } from "@material-ui/icons";
 import Axios from "axios";
 import Navbar from "./components/navbar.component";
-firebase.initializeApp({
-    apiKey: "AIzaSyC5bjSXgNT4ME3G1CtMECI2Ee2d2fLIMJQ",
-    authDomain: "reactchat-d97e5.firebaseapp.com",
-    databaseURL: "https://reactchat-d97e5.firebaseio.com",
-    projectId: "reactchat-d97e5",
-    storageBucket: "reactchat-d97e5.appspot.com",
-    messagingSenderId: "351876205185",
-});
+firebase.initializeApp(JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG))
 function Alert(props) {
     return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
@@ -65,7 +58,11 @@ function App() {
                 console.log(data);
                 setUsers(data.data);
             })
-            .catch((err) => console.log(err.response));
+            .catch((err) => {
+                handleErr("Error fetching users");
+                handleOpen(true);
+                console.log(err.response)
+            });
     };
     useEffect(() => {
         getUsers();
@@ -192,15 +189,18 @@ const ChatRoom = () => {
     const [value, setValue] = useState("");
     const setMess = async (e) => {
         e.preventDefault();
-        const { uid, photoURL } = auth.currentUser;
-        if (value !== "")
-            await messRef.add({
-                text: value,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                uid,
-                photoURL,
-            });
-        setValue("");
+        try {
+            const { uid, photoURL } = auth.currentUser;
+            const msg = { text: value, createdAt: firebase.firestore.FieldValue.serverTimestamp(), uid, photoURL }
+            console.log(msg);
+            if (value !== "")
+                await messRef.add(msg);
+
+            setValue("");
+        }
+        catch (e) {
+            console.log(e.message)
+        }
     };
     useEffect(() => {
         xtra.current.scrollIntoView({ behavior: "smooth" });
@@ -247,9 +247,8 @@ const ChatMess = ({ msg }) => {
         <Grow in={true} style={{ transitionDelay: "300ms" }}>
             {/* <div className='bg-secondary'> */}
             <ListItem
-                className={`${
-                    uid !== auth.currentUser.uid ? "row" : "row-reverse"
-                }`}
+                className={`${uid !== auth.currentUser.uid ? "row" : "row-reverse"
+                    }`}
                 alignItems='flex-start'>
                 <ListItemAvatar className='my-auto '>
                     <Avatar src={photoURL} alt='' className='mx-auto' />
